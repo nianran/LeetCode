@@ -12,22 +12,11 @@ print("Hello, World!")
 
 class Solution {
     func isPowerOfFour(_ num: Int) -> Bool {
-        var a = num
-        while a > 0 {
-            a = a >> 2
-            if a / 4 == 0 && a % 4 != 0 {
-                break
-            }
-        }
-        if a / 4 == 0 {
-            return true
-        }else{
-            return false
-        }
+        return num > 0 && (num & (num - 1)) == 0 && (num & 0x55555555) != 0
     }
 }
 
-let a = Solution.init().isPowerOfFour(21)
+let a = Solution.init().isPowerOfFour(16)
 NSLog("\(a)")
 
 
