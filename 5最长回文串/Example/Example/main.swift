@@ -30,35 +30,59 @@ import Foundation
 //    }
 //}
 
+// 1. 中心扩展法
+//
 
+//    let arr = Array(s.utf8)
+//    var start = 0
+//    var end = 0
+//    for i in 0..<s.count {
+//        let len1 = expandAround(left: i, right: i, arr: arr)
+//        let len2 = expandAround(left: i, right: i+1, arr: arr)
+//        let len = max(len1, len2)
+//        if len > (end - start) {
+//            start = i - (len - 1) / 2;
+//            end = i + len / 2;
+//        }
+//    }
+//    return String(s[s.index(s.startIndex, offsetBy: start)...s.index(s.startIndex, offsetBy: end)])
+//}
+//
+//
+//func expandAround(left: Int, right: Int, arr: [String.UTF8View.Element]) -> Int {
+//    var _l = left
+//    var _r = right
+//    while _l >= 0 && _r < arr.count && arr[_l] == arr[_r]  {
+//        _l -= 1
+//        _r += 1
+//    }
+//    return _r - _l - 1
+//}
+
+
+
+// DP
 func longestPalindrome(_ s: String) -> String {
-    let arr = Array(s.utf8)
-    var start = 0
-    var end = 0
-    for i in 0..<s.count {
-        let len1 = expandAround(left: i, right: i, arr: arr)
-        let len2 = expandAround(left: i, right: i+1, arr: arr)
-        let len = max(len1, len2)
-        if len > (end - start) {
-            start = i - (len - 1) / 2;
-            end = i + len / 2;
+    let _s = Array(s.utf8)
+    var dp = Array.init(repeating: Array.init(repeating: false, count: s.count), count: s.count)
+    var ans = ""
+    for l in 0..<s.count {
+        for i in 0..<(s.count-l) {
+            let j = i + l
+            if l == 0 {
+                dp[i][j] = true
+            } else if (l == 1) {
+                dp[i][j] = _s[i] == _s[j]
+            } else {
+                dp[i][j] = _s[i] == _s[j] && dp[i + 1][j - 1]
+            }
+            if dp[i][j] && l + 1 > ans.count  {
+                ans = String(s[s.index(s.startIndex, offsetBy: i)...s.index(s.startIndex, offsetBy: j)])
+            }
         }
     }
-    return String(s[s.index(s.startIndex, offsetBy: start)...s.index(s.startIndex, offsetBy: end)])
+    return ans
 }
-
-
-func expandAround(left: Int, right: Int, arr: [String.UTF8View.Element]) -> Int {
-    var _l = left
-    var _r = right
-    while _l >= 0 && _r < arr.count && arr[_l] == arr[_r]  {
-        _l -= 1
-        _r += 1
-    }
-    return _r - _l - 1
-}
-
-
 
 print(longestPalindrome("asddsadsfd"))
 print(longestPalindrome("babad"))
